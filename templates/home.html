@@ -25,20 +25,116 @@
     <![endif]-->
 </head>
 <body>
+<div class="container-fluid">
+	<h1>RSS Headlines</h1>
 
-		<body>
-		<form action="/" method="POST">
-			<input type="text" name="publication" placeholder="search">
-			<input type="submit" value="Submit">
+<header>
+<div class="card text-center">
+  <div class="card-header">
+    Featured
+  </div>
+  <div class="card-block">
+    <h4 class="card-title">Current Weather</h4>
+    <p class="card-text">City: {{weather.city}},{{weather.country}}</p>
+    <form class="form-inline">
+			<div class="form-group">
+			<input type="text" name="city" placeholder="weather search by city" class="form-control">
+			</div>
+			<input type="submit" value="Submit" class="btn btn-group">				
 		</form>
-		<h1>BBC Headlines</h1>
-		{% for article in articles %}
-			
-			<b><a href="{{article.link}}">{{article.title}}</a></b><br>
-		<i>{{article.published}}</i><br>
-		<p>{{article.summary}}</p><br>
+  </div>
+  <div class="card-footer text-muted">
+   {{weather.description}} | {{weather.temperature}}&#8451;
+  </div>
+</div>	
+		
+</header>
+</div>
+<div class="container">
+<div class="row">
+	<h3 class="bad">Exchange rate</h3>
+	</div>
+			<div class="row bg-info">
+				<form class="form-inline">
+			<label for="currency_from" class="form-control-label">From:</label>
+				<select name="currency_from" id="currency_from" class="custom-select">
+					{% for c_rate in rates %}
+						
+						<option value="{{c_rate}}" class="list-group-item"
+						 
+						 {% if c_rate == currency_from %}
+						 	selected
+						 {% endif %}
+						 ><span class="list-group-item-text">{{c_rate}}</span></option>
 
-		{% endfor %}
+					{% endfor %}
+				</select>
+				<label for="currency_to" class="form-control-label">To:</label>
+				<select name="currency_to" id="currency_to" class="custom-select">
+					{% for c_rate in rates %}
+						
+						<option value="{{c_rate}}" class="list-group-item"
+						 {% if c_rate == currency_to %}
+						 	selected
+						 {% endif %}
+						 ><span class="list-group-item-text">{{c_rate}}</span></option>
+
+					{% endfor %}
+				</select>
+				<input type="submit" value="Submit" class="btn btn-secondary">
+			</form>
+
+<p class="h4">1 {{currency_from.upper()}} = {{ "${:.5f}".format(rate|float) }} {{currency_to.upper()}}</p>			</div>
+		
+	</div>
+	<div class="container">
+	<div class="row">
+			<h3 class="col-8">{{publication.upper()}} Headlines</h3>
+
+			<form class="form-inline col-lg-4">
+				<label for="rss_publication" class="form-control-label">Publication:</label>
+				<select name="publication" id="rss_publication" class="custom-select">
+					
+					{% for rss in feeds %}
+						<option value="{{rss}}" class="list-group-item"
+							{% if rss == publication %}
+						 	selected
+						 {% endif %}
+						>
+						<span class="list-group-item-text">{{rss}}</span></option>
+					{% endfor %}
+
+				</select>
+				<input type="submit" value="Submit" class="btn btn-toolbar">
+			</form>
+			</div>
+		<div class="row">
+
+
+
+
+					{% for article in articles %}	
+					<div class="card" style="width: 20rem;">
+  {% if article.media_thumbnail %}
+  <img class="card-img-top img-fluid"
+
+   	src="{{article.media_thumbnail[0]["url"]}}"
+   	width="{{article.media_thumbnail[0]["width"]}}" height="{{article.media_thumbnail[0]["height"]}}"
+   alt="{{article.title}}" >
+   {% endif %} 
+  
+  <div class="card-block">
+    <a class="card-title h4" href="{{article.link}}">{{article.title}}</a>
+    <p class="card-text">{{article.summary}}</p>
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">{{article.published}}</li>
+  </ul>
+</div>
+
+					{% endfor %}
+					</div>
+		</div>
   <script src="js/scripts.js"></script>
 
 	
